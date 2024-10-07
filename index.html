@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    @font-face {
+    font-family: 'Arcade';
+    src: url('ruta/a/tu/fuente/Arcade.woff2') format('woff2'),
+         url('ruta/a/tu/fuente/Arcade.woff') format('woff');
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: 'Arcade', sans-serif;
+    }
+    .container {
+        width: 800px;
+        height: 600px;
+        border: 1px solid black;
+        border-radius: 10px;
+    }
+    .box {
+        position: absolute;
+        animation: move 1s linear forwards;
+    }
+    @keyframes move {
+        0% {
+            transform: translate(0px,0px);
+            opacity: 1;
+        }
+        100% {
+            transform: translate(calc(var(--y)), calc(var(--x)));
+            opacity: 0;
+        }
+    }
+    @media (prefers-color-scheme: dark) {
+            body {
+                background-color: black; /* Color de fondo para el modo oscuro */
+                color: white; /* Color de texto para el modo oscuro */
+            }
+            .box {
+                background-color: white; /* Color de los cuadros para el modo oscuro */
+                box-shadow: 0 0 10px white; /* Sombra para el modo oscuro */
+            }
+        }
+</style>
+<body>
+    <h1>Home</h1>
+    <div class="container"></div>
+    <script>
+        let state= {
+            xCoord: undefined,
+            yCoord: undefined
+        }
+        const container = document.querySelector('.container');
+        container.addEventListener('mousemove', (e) => {
+            for (let i = 0; i < 3; i++) {
+                createBox(e);
+            }
+        })
+        const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink'];
+        function createBox(e) {
+            state.xCoord = e.clientX;
+            state.yCoord = e.clientY;
+            const randomScale = Math.random() *20;
+            const box = document.createElement('div');
+            box.classList.add('box');
+            box.style.width = `${randomScale}px`;
+            box.style.height = `${randomScale}px`;
+            box.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+            box.style.left = `${state.xCoord - randomScale/2}px`;
+            box.style.top = `${state.yCoord -randomScale/2}px`;
+            box.style.setProperty('--x', `${(Math.random()-.5)*100}px`);
+            box.style.setProperty('--y', `${(Math.random()-.5)*100}px`);
+            container.appendChild(box);
+            box.addEventListener('animationend', () => {
+                box.remove();
+            })
+        }
+    </script>
+</body>
+</html>

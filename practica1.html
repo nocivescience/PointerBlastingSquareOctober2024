@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    #container {
+        width: 800px;
+        height: 600px;
+        border: 1px solid black;
+        border-radius: 10px;
+        position: relative;
+    }
+</style>
+<body>
+    <div id="container"></div>
+    <script>
+        const containerEl = document.getElementById('container')
+        let mouse={
+            xmouse: undefined,
+            ymouse: undefined
+        };
+        let isDragging = false;
+        let selectedBox = null;
+        const boxes = []
+        containerEl.addEventListener('click', (e) => {
+            mouse.xmouse = e.offsetX
+            mouse.ymouse = e.offsetY
+            const box = document.createElement('div')
+            box.style.width = '50px'
+            box.style.height = '50px'
+            box.style.backgroundColor = 'red'
+            box.style.position = 'absolute'
+            box.style.left = `${mouse.xmouse}px`
+            box.style.top = `${mouse.ymouse}px`;
+            boxes.push(box)
+            box.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                selectedBox = box;
+                mouse.offsetX = e.offsetX
+                mouse.offsetY = e.offsetY
+            })
+            containerEl.appendChild(box)
+        })
+        containerEl.addEventListener('mousemove', (e) => {
+            if(isDragging){
+                selectedBox.style.left = `${e.offsetX - mouse.offsetX}px`
+                selectedBox.style.top = `${e.offsetY - mouse.offsetY}px`
+            }
+        })
+        containerEl.addEventListener('mouseup', () => {
+            if(isDragging){
+                selectedBox.style.cursor = 'grab'
+                isDragging = false;
+                selectedBox = null;
+            }
+        })
+    </script>
+</body>
+</html>
